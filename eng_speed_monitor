@@ -5,9 +5,9 @@
 
 unsigned int ten_ms_sample = 0;
 int rpm_motor_count;
-int pulse_per_rev = 10;
+int pulse_per_rev = 3;
 int ten_ms_counter = 0;
-const int sample_time = 10; // 10 ms
+const int sample_time = 200; //200 ms
 float rpm_motor;
 bool ten_ms_counter_flag = false;
 bool motor_sim = false;
@@ -35,7 +35,7 @@ void setup() {
 
 
 void loop() {
- 
+
   if (ten_ms_counter_flag == true) {
     Serial.println(rpm_motor);
     ten_ms_counter_flag = false;
@@ -53,10 +53,10 @@ ISR(TIMER2_OVF_vect) {
 
   motor_sim = !motor_sim;
   digitalWrite(9, motor_sim);
-  
+
   ten_ms_counter++;
-  if (ten_ms_counter > 9) {
-    rpm_motor = (float (rpm_motor_count)/float(pulse_per_rev)) * (1000/float(sample_time))*60;
+  if (ten_ms_counter > 195) { // Sample time would be 199.99 ms
+    rpm_motor = (float (rpm_motor_count)/float(pulse_per_rev)) * (1000/float(sample_time))*60; //Resolution = 100 RPM
     rpm_motor_count = 0;
     ten_ms_counter_flag = true;
     ten_ms_counter = 0;
